@@ -13,6 +13,6 @@ jobs:
     steps:
     - uses: actions/checkout@master
     - name: Install Dependencies (Linux)
-      if: startsWith(matrix.os, "ubuntu-")
+      if: startsWith(matrix.os, 'ubuntu-')
       run: sudo apt install libpcap-dev
     - run: swift run
