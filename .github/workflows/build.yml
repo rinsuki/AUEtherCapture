@@ -43,7 +43,7 @@ jobs:
       run: curl -o swift-installer.exe https://swift.org/builds/development/windows10/swift-DEVELOPMENT-SNAPSHOT-2021-02-18-a/swift-DEVELOPMENT-SNAPSHOT-2021-02-18-a-windows10.exe
     - name: Install Swift (Windows)
       if: startsWith(matrix.os, 'windows-')
-      run: Start-Process -Wait -FilePath C:\Users\runneradmin\Downloads\swift-DEVELOPMENT-SNAPSHOT-2021-02-18-a-windows10.exe -ArgumentList ("/quiet", "/norestart")
+      run: Start-Process -Wait -FilePath swift-installer.exe -ArgumentList ("/quiet", "/norestart")
     - name: Set Environment Variables (Windows)
       if: startsWith(matrix.os, 'windows-')
       run: |
