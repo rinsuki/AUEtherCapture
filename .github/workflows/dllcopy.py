@@ -41,7 +41,8 @@ def find_dll_and_copy(pe_binary: str, copy_dest: str):
             print("WARNING: Can't find ", dll)
 
     for dllpath in dllpaths:
-        if dllpath.startswith(r"C:\Library"):
+        if dllpath.startswith(r"C:\Library") and dllpath not in copied_dlls:
+            copied_dlls.append(dllpath)
             shutil.copy2(dllpath, copy_dest)
             print("Copied", dllpath)
             # swiftCore.dll → ICU とかの依存をコピーするために再帰で探す必要がある
