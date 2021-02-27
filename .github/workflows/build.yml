@@ -64,7 +64,9 @@ jobs:
         mkdir -p artifact/AUEtherCapture
     - name: Copy Executable (Windows)
       if: startsWith(matrix.os, 'windows-')
-      run: cp .build/release/AUEtherCapture.exe artifact/AUEtherCapture/
+      run: |
+        cp .build/release/AUEtherCapture.exe artifact/AUEtherCapture/
+        python3 .github/workflows/dllcopy.py artifact/AUEtherCapture/AUEtherCapture.exe
     - name: Copy Executable (Linux)
       if: startsWith(matrix.os, 'ubuntu-')
       run: cp .build/release/AUEtherCapture artifact/AUEtherCapture
