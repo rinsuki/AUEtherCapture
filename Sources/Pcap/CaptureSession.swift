@@ -5,6 +5,9 @@
 //  Created by user on 2021/02/27.
 //
 import Foundation
+#if os(Windows)
+import WinSDK // for timeval struct (in winsock)
+#endif
 import libpcap
 
 public class CaptureSession: IteratorProtocol {
