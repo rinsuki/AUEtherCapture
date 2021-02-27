@@ -20,6 +20,7 @@ jobs:
       run: sudo apt install libpcap-dev
     # --- Windows
     - uses: seanmiddleditch/gha-setup-vsdevenv@8c6bbf80998779f2bba87b1452832e561b65fd57
+      if: startsWith(matrix.os, 'windows-')
     - name: Install Npcap SDK (Windows)
       if: startsWith(matrix.os, 'windows-')
       run: |
