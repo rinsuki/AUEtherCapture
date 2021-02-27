@@ -52,3 +52,22 @@ jobs:
         Copy-Item "$env:SDKROOT\usr\share\winsdk.modulemap" -destination "$env:UniversalCRTSdkDir\Include\$env:UCRTVersion\um\module.modulemap"    # --- Shared
     # --- Shared
     - run: swift run
+    # Generate Artifact
+    - name: Prepare for Artifact
+      run: |
+        mkdir -p artifact/AUEtherCapture
+    - name: Copy Executable (Windows)
+      if: startsWith(matrix.os, 'windows-')
+      run: cp .build/release/AUEtherCapture.exe artifact/AUEtherCapture/
+    - name: Copy Executable (Linux)
+      if: startsWith(matrix.os, 'ubuntu-')
+      run: cp .build/release/AUEtherCapture artifact/AUEtherCapture
+    - name: Copy Executable (macOS)
+      if: startsWith(matrix.os, 'macOS-')
+      run: cp .build/release/AUEtherCapture artifact/AUEtherCapture
+    - name: Upload Artifact
+      uses: actions/upload-artifact
+      with:
+        name: Artifact.${{ matrix.os }}
+        path: artifact
+        if-no-files-found: error
