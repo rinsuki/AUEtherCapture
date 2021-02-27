@@ -51,7 +51,12 @@ jobs:
         Copy-Item "$env:SDKROOT\usr\share\visualc.apinotes" -destination "$env:VCToolsInstallDir\include\visualc.apinotes"
         Copy-Item "$env:SDKROOT\usr\share\winsdk.modulemap" -destination "$env:UniversalCRTSdkDir\Include\$env:UCRTVersion\um\module.modulemap"    # --- Shared
     # --- Shared
-    - run: swift build -c release
+    - name: swift build (for macOS)
+      if: startsWith(matrix.os, 'macOS-')
+      run: swift build -c release
+    - name: swift build (for not macOS, static stdlib)
+      if: ${{ !startsWith(matrix.os, 'macOS-') }}
+      run: swift build -c release -Xswiftc -static-stdlib 
     # Generate Artifact
     - name: Prepare for Artifact
       run: |
