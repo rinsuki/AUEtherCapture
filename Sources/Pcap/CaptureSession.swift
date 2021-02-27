@@ -27,7 +27,11 @@ public class CaptureSession: IteratorProtocol, CustomStringConvertible {
         let src: String
         switch source {
         case .device(let device):
-            src = "Device,\(device.name)"
+            if let desc = device.description {
+                src = "Device,\(device.name) (\(desc))"
+            } else {
+                src = "Device,\(device.name)"
+            }
         case .file(let url):
             src = "File,\(url.path)"
         }
