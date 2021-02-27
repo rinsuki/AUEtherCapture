@@ -9,6 +9,7 @@ import Foundation
 
 public struct Timestamp: CustomStringConvertible {
     public var seconds: Int
+    // microseconds are 0 ~ 1_000_000, so it should Int32
     public var usecs: Int32
     
     public var double: Double {
@@ -21,6 +22,6 @@ public struct Timestamp: CustomStringConvertible {
     
     init(_ timeval: timeval) {
         seconds = timeval.tv_sec
-        usecs = timeval.tv_usec
+        usecs = Int32(timeval.tv_usec)
     }
 }
