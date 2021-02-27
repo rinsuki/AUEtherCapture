@@ -30,6 +30,7 @@ jobs:
         echo "INCLUDE=C:\npcap-sdk\include;$env:INCLUDE" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
         echo "LIB=C:\npcap-sdk\Lib\x64;$env:LIB" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
         echo "LIBPATH=C:\npcap-sdk\Lib\x64;$env:LIBPATH" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+        Copy-Item "C:\npcap-sdk\Lib\x64\wpcap.lib" "C:\npcap-sdk\Lib\x64\pcap.lib"
     # from https://github.com/actions/virtual-environments/issues/1652#issuecomment-735446611
     - name: Install Swift (Windows)
       if: startsWith(matrix.os, 'windows-')
