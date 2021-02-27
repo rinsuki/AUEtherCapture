@@ -43,6 +43,7 @@ jobs:
         echo "DEVELOPER_DIR=C:\Library\Developer" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
         echo "C:\Library\Swift-development\bin;C:\Library\icu-67\usr\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
         echo "C:\Library\Developer\Toolchains\unknown-Asserts-development.xctoolchain\usr\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+        echo "LIB=C:\Library\Developer\Platforms\Windows.platform\Developer\SDKs\Windows.sdk\usr\lib\swift\windows\x86_64;$env:LIB" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
     - name: Install Supporting Files (Windows)
       if: startsWith(matrix.os, 'windows-')
       run: |
