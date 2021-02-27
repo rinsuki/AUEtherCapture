@@ -47,5 +47,7 @@ def find_dll_and_copy(pe_binary: str, copy_dest: str):
             print("Copied", dllpath)
             # swiftCore.dll → ICU とかの依存をコピーするために再帰で探す必要がある
             find_dll_and_copy(dllpath, copy_dest)
+        else:
+            print("System", dllpath)
 
 find_dll_and_copy(sys.argv[1], os.path.dirname(sys.argv[1]))
