@@ -21,7 +21,7 @@ public struct Timestamp: CustomStringConvertible {
     }
     
     init(_ timeval: timeval) {
-        seconds = timeval.tv_sec
-        usecs = Int32(timeval.tv_usec)
+        seconds = .init(timeval.tv_sec)
+        usecs = .init(timeval.tv_usec)
     }
 }
