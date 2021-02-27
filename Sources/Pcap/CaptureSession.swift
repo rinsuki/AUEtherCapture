@@ -6,7 +6,7 @@
 //
 import Foundation
 #if os(Windows)
-import WinSDK // for timeval struct (in winsock)
+import ucrt // for timeval struct (in winsock)
 #endif
 import libpcap
 
