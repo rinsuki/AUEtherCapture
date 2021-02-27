@@ -19,9 +19,17 @@ jobs:
       if: startsWith(matrix.os, 'ubuntu-')
       run: sudo apt install libpcap-dev
     # --- Windows
+    - name: Install Npcap SDK (Windows)
+      if: startsWith(matrix.os, 'windows-')
+      run: |
+        wget https://nmap.org/npcap/dist/npcap-sdk-1.06.zip
+        Expand-Archive npcap-sdk-1.06.zip
+        mv npcap-sdk-1.06 C:/npcap-sdk
+        echo "INCLUDE=C:\npcap-sdk\include" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+        echo "LIB=C:\npcap-sdk\Lib\x64" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+        echo "LIBPATH=C:\npcap-sdk\Lib\x64" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
     # from https://github.com/actions/virtual-environments/issues/1652#issuecomment-735446611
     - uses: seanmiddleditch/gha-setup-vsdevenv@8c6bbf80998779f2bba87b1452832e561b65fd57
-      if: startsWith(matrix.os, 'windows-')
     - name: Install Swift (Windows)
       if: startsWith(matrix.os, 'windows-')
       run: |
