@@ -3,10 +3,13 @@ on:
 
 jobs:
   build:
-    runs-on:
-    - macOS-latest
-    - ubuntu-20.04
-    - windows-2019
+    strategy:
+      matrix:
+        os:
+        - macOS-latest
+        - ubuntu-20.04
+        - windows-2019
+    runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@master
     - run: swift run
