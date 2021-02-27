@@ -12,17 +12,34 @@ typealias timeval = TIMEVAL
 #endif
 import libpcap
 
-public class CaptureSession: IteratorProtocol {
+public class CaptureSession: IteratorProtocol, CustomStringConvertible {
     public typealias Element = (Timestamp, Data)
 
+    private enum Source {
+        case device(Device)
+        case file(URL)
+    }
+    private var source: Source
     public private(set) var finished: Bool = false
     private var nativeHandler: OpaquePointer
+    
+    public var description: String {
+        let src: String
+        switch source {
+        case .device(let device):
+            src = "Device,\(device.name)"
+        case .file(let url):
+            src = "File,\(url.path)"
+        }
+        return "<\(String(describing: Self.self)) source=\(src)>"
+    }
     
     deinit {
         pcap_close(nativeHandler)
     }
     
     public init(device: Device, promisc: Bool = false) throws {
+        self.source = .device(device)
         self.nativeHandler = try withErrBuf { pcap_open_live(device.name, 1500, promisc ? 1 : 0, 16, &$0) }
     }
     
@@ -30,6 +47,7 @@ public class CaptureSession: IteratorProtocol {
         guard file.isFileURL else {
             preconditionFailure("file parameter should file:// URL")
         }
+        self.source = .file(file)
         self.nativeHandler = try withErrBuf { pcap_open_offline(file.path, &$0) }
     }
     
