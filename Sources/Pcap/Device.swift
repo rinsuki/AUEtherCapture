@@ -26,11 +26,12 @@ public struct Device {
         var devices: UnsafeMutablePointer<pcap_if_t>? = nil
         var result: [Device] = []
         pcap_findalldevs(&devices, &errbuf)
+        let firstDevice = devices
         while let device = devices?.pointee {
             result.append(.init(from: device))
             devices = device.next
         }
-        pcap_freealldevs(devices)
+        pcap_freealldevs(firstDevice)
         return result
     }
 }
