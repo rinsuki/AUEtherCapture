@@ -66,6 +66,7 @@ public class CaptureSession: IteratorProtocol, CustomStringConvertible {
         if pcap_setfilter(nativeHandler, &program) == -1 {
             throw PcapError.failedToSetBPF
         }
+        pcap_freecode(&program)
     }
     
     public func next() -> Element? {
