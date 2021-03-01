@@ -2,13 +2,46 @@ import Foundation
 import Pcap
 import ArgumentParser
 import Regex
+import BinaryReader
 
 struct CLI: ParsableCommand {
     @Option(name: .long, help: "IP Address of client (IPv4).")
     var clientIP: IPv4.Address
     
+    @Option(name: .long, help: "Network Interface for packet capture.")
+    var networkInterface: String?
+    
+    @Flag(name: .long, help: "Show List of Network Interface that available.")
+    var listNetworkInterface: Bool = false
+    
     func run() throws {
-        func createCaptureSession() throws -> Pcap.CaptureSession? {
+        if listNetworkInterface {
+            print("Available (and compatible) Network Interfaces: ")
+            var notAvailableInterfaces = [Device]()
+            for device in Pcap.Device.all() {
+                if let datalink = try? Pcap.CaptureSession(device: device).datalink, datalink != .ethernet {
+                    notAvailableInterfaces.append(device)
+                    continue
+                }
+                if let desc = device.description {
+                    print("\(device.name)\t\(desc)")
+                } else {
+                    print(device.name)
+                }
+            }
+            if notAvailableInterfaces.count > 0 {
+                print()
+                print("Incompatible Network Interfaces: \(notAvailableInterfaces.map { $0.name }.joined(separator: ", "))")
+            }
+            print()
+            return
+        }
+        
+        func createCaptureSession(prefer: String?) throws -> Pcap.CaptureSession? {
+            let devices = Pcap.Device.all()
+            if let prefer = prefer, let device = devices.first(where: { $0.name == prefer }) {
+                return try Pcap.CaptureSession(device: device, timeoutMillisec: 50)
+            }
             for device in Pcap.Device.all() {
                 let session = try Pcap.CaptureSession(device: device, timeoutMillisec: 50)
                 if session.datalink != .ethernet {
@@ -20,7 +53,7 @@ struct CLI: ParsableCommand {
             return nil
         }
 
-        guard let session = try createCaptureSession() else {
+        guard let session = try createCaptureSession(prefer: networkInterface) else {
             print("Failed to find network interface")
             Foundation.exit(1)
         }
@@ -32,11 +65,12 @@ struct CLI: ParsableCommand {
 
         print("session started", session)
 
+        var state = CaptureState()
         while let (ts, packet) = session.next() {
             let ethernet = Ethernet(from: packet)
-            print(ts.seconds, ethernet)
             if case .ipv4(let ipv4) = ethernet.content, case .udp(let udp) = ipv4.content {
-                print(udp.data)
+                state.timestamp = ts.double
+                state.handle(data: udp.data, pair: .init(srcAddress: ipv4.src, srcPort: udp.src, dstAddress: ipv4.dst, dstPort: udp.dst))
             }
         }
     }

@@ -27,7 +27,7 @@ struct IPv4 {
         }
     }
     
-    struct Address: CustomStringConvertible {
+    struct Address: CustomStringConvertible, Hashable {
         var value: (UInt8, UInt8, UInt8, UInt8)
         
         var string: String {
@@ -36,6 +36,17 @@ struct IPv4 {
         
         var description: String {
             String(format: "%3d.%3d.___.___", value.0, value.1, value.2, value.3)
+        }
+        
+        func hash(into hasher: inout Hasher) {
+            hasher.combine(value.0)
+            hasher.combine(value.1)
+            hasher.combine(value.2)
+            hasher.combine(value.3)
+        }
+        
+        static func == (lhs: IPv4.Address, rhs: IPv4.Address) -> Bool {
+            return lhs.value == rhs.value
         }
     }
     
