@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "BinaryReader",
+        "repositoryURL": "https://github.com/rinsuki/BinaryReaderSwift",
+        "state": {
+          "branch": "master",
+          "revision": "b5aa8aae310e974cf8696c6b4db2f9588fb4698e",
+          "version": null
+        }
+      }
+    ]
+  },
+  "version": 1
+}
