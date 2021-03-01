@@ -4,7 +4,7 @@ import Pcap
 
 func createCaptureSession() throws -> Pcap.CaptureSession? {
     for device in Pcap.Device.all() {
-        let session = try Pcap.CaptureSession(device: device)
+        let session = try Pcap.CaptureSession(device: device, timeoutMillisec: 50)
         if session.datalink != .ethernet {
             print("Skip \(device) because this device's datalink is not ethernet (\(session.datalink))")
             continue

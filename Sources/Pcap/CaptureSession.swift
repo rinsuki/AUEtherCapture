@@ -45,9 +45,9 @@ public class CaptureSession: IteratorProtocol, CustomStringConvertible {
         pcap_close(nativeHandler)
     }
     
-    public init(device: Device, promisc: Bool = false) throws {
+    public init(device: Device, promisc: Bool = false, timeoutMillisec: Int32 = 16) throws {
         self.source = .device(device)
-        self.nativeHandler = try withErrBuf { pcap_open_live(device.name, 1500, promisc ? 1 : 0, 16, &$0) }
+        self.nativeHandler = try withErrBuf { pcap_open_live(device.name, 1500, promisc ? 1 : 0, timeoutMillisec, &$0) }
     }
     
     public init(file: URL) throws {
