@@ -22,6 +22,9 @@ public class CaptureSession: IteratorProtocol, CustomStringConvertible {
     private var source: Source
     public private(set) var finished: Bool = false
     private var nativeHandler: OpaquePointer
+    public var datalink: DataLink {
+        return .init(value: pcap_datalink(nativeHandler))
+    }
     
     public var description: String {
         let src: String
