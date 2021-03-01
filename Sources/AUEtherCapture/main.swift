@@ -19,10 +19,18 @@ guard let session = try createCaptureSession() else {
     exit(1)
 }
 
+let auports = [22023, 22123, 22223, 22323, 22423, 22523, 22623, 22723, 22823, 22923]
+let bpf = "udp and (port \(auports.map { String($0) }.joined(separator: " or ")))"
+print(bpf)
+try session.setBPF(filter: bpf)
+
 print("session started", session)
 
 while let (ts, packet) = session.next() {
     let ethernet = Ethernet(from: packet)
     print(ts.seconds, ethernet)
+    if case .ipv4(let ipv4) = ethernet.content, case .udp(let udp) = ipv4.content {
+        print(udp.data)
+    }
 }
 

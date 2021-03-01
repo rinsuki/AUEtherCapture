@@ -10,6 +10,8 @@ import libpcap
 
 public enum PcapError: Error {
     case withString(String)
+    case failedToCompileBPF
+    case failedToSetBPF
 }
 
 func withErrBuf<T>(_ callback: (inout [Int8]) -> T?) throws -> T {

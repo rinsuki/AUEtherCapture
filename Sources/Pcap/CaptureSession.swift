@@ -58,6 +58,16 @@ public class CaptureSession: IteratorProtocol, CustomStringConvertible {
         self.nativeHandler = try withErrBuf { pcap_open_offline(file.path, &$0) }
     }
     
+    public func setBPF(filter: String) throws {
+        var program = bpf_program()
+        if pcap_compile(nativeHandler, &program, filter, 0, 0) == -1 {
+            throw PcapError.failedToCompileBPF
+        }
+        if pcap_setfilter(nativeHandler, &program) == -1 {
+            throw PcapError.failedToSetBPF
+        }
+    }
+    
     public func next() -> Element? {
         return next(returnIfTimeout: false)
     }
