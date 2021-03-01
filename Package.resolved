@@ -9,6 +9,24 @@
           "revision": "b5aa8aae310e974cf8696c6b4db2f9588fb4698e",
           "version": null
         }
+      },
+      {
+        "package": "Regex",
+        "repositoryURL": "https://github.com/sharplet/Regex",
+        "state": {
+          "branch": null,
+          "revision": "76c2b73d4281d77fc3118391877efd1bf972f515",
+          "version": "2.1.1"
+        }
+      },
+      {
+        "package": "swift-argument-parser",
+        "repositoryURL": "https://github.com/apple/swift-argument-parser",
+        "state": {
+          "branch": null,
+          "revision": "9564d61b08a5335ae0a36f789a7d71493eacadfc",
+          "version": "0.3.2"
+        }
       }
     ]
   },

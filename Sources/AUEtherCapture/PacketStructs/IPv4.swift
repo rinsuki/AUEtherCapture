@@ -30,6 +30,10 @@ struct IPv4 {
     struct Address: CustomStringConvertible {
         var value: (UInt8, UInt8, UInt8, UInt8)
         
+        var string: String {
+            String(format: "%d.%d.%d.%d", value.0, value.1, value.2, value.3)
+        }
+        
         var description: String {
             String(format: "%3d.%3d.___.___", value.0, value.1, value.2, value.3)
         }
