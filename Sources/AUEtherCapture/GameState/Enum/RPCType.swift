@@ -10,6 +10,7 @@ import Foundation
 enum RPCType: UInt8 {
     case playAnimation = 0x00
     case completeTask = 0x01
+    case syncSettings = 0x02
     case setInfected = 0x03
     case setName = 0x06
     case setColor = 0x08

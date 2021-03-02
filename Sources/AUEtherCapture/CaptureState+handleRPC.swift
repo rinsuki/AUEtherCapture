@@ -38,7 +38,7 @@ extension CaptureState {
         case .murderPlayer:
             let victim = gameState.components[reader.packedUInt32()]!.obj.playerID!
             let impostor = sender.playerID!
-            gameState.add(event: .kill(.init(impostor: impostor, victim: victim, timestamp: timestamp)))
+            gameState.add(event: .kill(.init(imposter: impostor, victim: victim, timestamp: timestamp)))
             gameState.modify(playerID: victim) { player in
                 player.deadAt = timestamp
             }
