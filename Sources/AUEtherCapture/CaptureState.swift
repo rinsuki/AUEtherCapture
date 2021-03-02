@@ -87,6 +87,9 @@ struct CaptureState {
             print("Reset State")
             gameState = .init()
         case .endGame: // EndGame
+            _ = reader.int32()
+            let reason = EndReason(rawValue: reader.uint8())
+            gameState.endReason = reason
             gameState.finish(at: timestamp - gameState.startedAt)
             gameState = .init()
         default:

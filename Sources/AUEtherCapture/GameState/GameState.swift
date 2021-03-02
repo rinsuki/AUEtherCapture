@@ -10,6 +10,7 @@ import Foundation
 struct GameState: Encodable {
     var id: GameID = .init(rawValue: 0)
     var settings: GameSettings?
+    var endReason: EndReason?
     var startedAt: Double = 0
     var duration: Double = 0
     var events = [GameEvent]()
@@ -25,6 +26,7 @@ struct GameState: Encodable {
         try container.encode(id, forKey: .id)
         try container.encode(1, forKey: .replayVersion)
         try container.encode(settings, forKey: .settings)
+        try container.encode(endReason, forKey: .endReason)
         try container.encode(startedAt, forKey: .startedAt)
         try container.encode(duration, forKey: .duration)
         try container.encode(Array(players.values).sorted(by: { $1.id > $0.id }), forKey: .players)
@@ -36,6 +38,7 @@ struct GameState: Encodable {
     enum CodingKeys: String, CodingKey {
         case id
         case settings
+        case endReason = "end_reason"
         case replayVersion = "replay_version"
         case startedAt = "started_at"
         case duration
