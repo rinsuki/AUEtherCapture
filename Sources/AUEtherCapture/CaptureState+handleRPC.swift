@@ -90,7 +90,6 @@ extension CaptureState {
                     votedFor = nil
                 }
                 if let player = gameState.players[Player.ID(i)], player.deadAt == nil, player.disconnectedAt == nil {
-                    print("votedFor", votedFor)
                     states.append(.init(id: player.id, didReport: didReport, didVote: didVote, votedFor: votedFor))
                 }
             }
