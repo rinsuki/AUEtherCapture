@@ -97,6 +97,21 @@ extension CaptureState {
             }
         case .playAnimation, .completeTask: // ignore
             break
+        case .syncSettings:
+            _ = reader.packedUInt32() // length
+            let ver = reader.uint8()
+            switch ver {
+            case 1:
+                gameState.settings = .v1(.init(from: &reader))
+            case 2:
+                gameState.settings = .v2(.init(from: &reader), .init(from: &reader))
+            case 3:
+                gameState.settings = .v3(.init(from: &reader), .init(from: &reader), .init(from: &reader))
+            case 4:
+                gameState.settings = .v4(.init(from: &reader), .init(from: &reader), .init(from: &reader), .init(from: &reader))
+            default:
+                fatalError("Unknown GameSettings Version: \(ver)")
+            }
         default:
             print("RPC", rpcType, senderID)
         }

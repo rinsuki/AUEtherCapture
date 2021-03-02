@@ -10,7 +10,8 @@ import Foundation
 enum GameEvent {
     case kill(KillEvent)
     struct KillEvent: Encodable {
-        var impostor: Player.ID
+        // it should impost"e"r for backward compatiblity
+        var imposter: Player.ID
         var victim: Player.ID
         var timestamp: Double
     }

@@ -38,4 +38,8 @@ extension BinaryReader {
         }
         return current
     }
+    
+    mutating func float32() -> Float32 {
+        return Float32(bitPattern: uint32())
+    }
 }
