@@ -83,9 +83,15 @@ extension CaptureState {
             let count = reader.packedUInt32()
             for i in 0..<count {
                 let flags = reader.uint8()
-                let votedFor = (flags & 0x40) != 0 || (flags & 0xF) == 0 ? nil : (flags & 0xF) - 1
+                let didReport = (flags & 0x20) != 0
+                let didVote = (flags & 0x40) != 0
+                var votedFor = (flags & 0xF) == 0 ? nil : (flags & 0xF) - 1
+                if !didVote {
+                    votedFor = nil
+                }
                 if let player = gameState.players[Player.ID(i)], player.deadAt == nil, player.disconnectedAt == nil {
-                    states.append(.init(id: player.id, didReport: (flags & 0x20) != 0, didVote: (flags & 0x40) != 0, votedFor: votedFor))
+                    print("votedFor", votedFor)
+                    states.append(.init(id: player.id, didReport: didReport, didVote: didVote, votedFor: votedFor))
                 }
             }
             let exiled = reader.uint8()
