@@ -14,6 +14,9 @@ struct CLI: ParsableCommand {
     @Flag(name: .long, help: "Show List of Network Interface that available.")
     var listNetworkInterface: Bool = false
     
+    @Option(name: .long, help: "Path to PCAP(NG) file that load.")
+    var pcapFilePath: String?
+    
     func run() throws {
         if listNetworkInterface {
             print("Available (and compatible) Network Interfaces: ")
@@ -38,6 +41,9 @@ struct CLI: ParsableCommand {
         }
         
         func createCaptureSession(prefer: String?) throws -> Pcap.CaptureSession? {
+            if let pcapFilePath = pcapFilePath {
+                return try Pcap.CaptureSession(file: URL(fileURLWithPath: pcapFilePath))
+            }
             let devices = Pcap.Device.all()
             if let prefer = prefer, let device = devices.first(where: { $0.name == prefer }) {
                 return try Pcap.CaptureSession(device: device, timeoutMillisec: 50)
