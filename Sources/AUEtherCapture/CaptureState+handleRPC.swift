@@ -52,7 +52,7 @@ extension CaptureState {
             guard let player = sender.playerID else {
                 break
             }
-            gameState.add(event: .startMeeting(.init(player: player, deadBody: victim, timestamp: timestamp)))
+            gameState.add(event: .startMeeting(.init(player: player, deadBody: gameState.players[victim]?.id, timestamp: timestamp)))
         case .sendChatNote:
             let player = reader.uint8()
             gameState.add(event: .voted(.init(player: player, timestamp: timestamp)))
