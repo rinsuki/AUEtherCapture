@@ -17,6 +17,9 @@ struct CLI: ParsableCommand {
     @Option(name: .long, help: "Path to PCAP(NG) file that load.")
     var pcapFilePath: String?
     
+    @Option(name: .long, help: "Output replay data to specific path.")
+    var outDir: String
+    
     func run() throws {
         if listNetworkInterface {
             print("Available (and compatible) Network Interfaces: ")
@@ -72,6 +75,7 @@ struct CLI: ParsableCommand {
         print("session started", session)
 
         var state = CaptureState()
+        state.outDir = URL(fileURLWithPath: outDir)
         while let (ts, packet) = session.next() {
             let ethernet = Ethernet(from: packet)
             if case .ipv4(let ipv4) = ethernet.content, case .udp(let udp) = ipv4.content {

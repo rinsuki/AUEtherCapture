@@ -11,6 +11,15 @@
         }
       },
       {
+        "package": "Gzip",
+        "repositoryURL": "https://github.com/1024jp/GzipSwift",
+        "state": {
+          "branch": null,
+          "revision": "ba0b6cb51cc6202f896e469b87d2889a46b10d1b",
+          "version": "5.1.1"
+        }
+      },
+      {
         "package": "Regex",
         "repositoryURL": "https://github.com/sharplet/Regex",
         "state": {
@@ -26,6 +35,15 @@
           "branch": null,
           "revision": "9564d61b08a5335ae0a36f789a7d71493eacadfc",
           "version": "0.3.2"
+        }
+      },
+      {
+        "package": "SwiftMsgPack",
+        "repositoryURL": "https://github.com/rinsuki/SwiftMsgPack",
+        "state": {
+          "branch": "implement/handling-nsnull",
+          "revision": "a79383425c597d5b37df7b62114633cd29acd6e9",
+          "version": null
         }
       }
     ]

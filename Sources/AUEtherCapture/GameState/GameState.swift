@@ -54,18 +54,6 @@ struct GameState: Encodable {
         events = []
     }
     
-    mutating func finish(at timestamp: Double) {
-        duration = timestamp
-        let encoder = JSONEncoder()
-        encoder.outputFormatting = [.prettyPrinted]
-        guard let data = try? encoder.encode(self) else {
-            return
-        }
-        let url = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("temp.aureplay.json")
-        try? data.write(to: url)
-        print("Writed to \(url.path)")
-    }
-    
     mutating func add(object: InnerNetObject) {
         objects.append(object)
         for component in object.components {

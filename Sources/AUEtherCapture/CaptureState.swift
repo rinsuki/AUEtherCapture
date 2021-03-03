@@ -7,6 +7,8 @@
 
 import Foundation
 import BinaryReader
+import SwiftMsgPack
+import Gzip
 
 struct Ack: Hashable {
     var pair: UDPPair
@@ -18,6 +20,7 @@ struct CaptureState {
     var callAfterFinishCurrentPacket = [() -> Void]()
     var timestamp: Double = 0
     var gameState = GameState()
+    var outDir: URL?
     
     mutating func handleACK(ack: Ack) -> Bool {
         if ackStore.contains(ack) {
@@ -90,10 +93,45 @@ struct CaptureState {
             _ = reader.int32()
             let reason = EndReason(rawValue: reader.uint8())
             gameState.endReason = reason
-            gameState.finish(at: timestamp - gameState.startedAt)
-            gameState = .init()
+            gameState.duration = timestamp - gameState.startedAt
+            gameFinish()
         default:
             print("Hazel", packet)
+        }
+    }
+    
+    mutating func gameFinish() {
+        if let outDir = outDir {
+            output(to: outDir)
+        }
+        gameState = .init()
+    }
+    
+    mutating func output(to dir: URL) {
+        do {
+            let jsonEncoder = JSONEncoder()
+            jsonEncoder.outputFormatting = [.prettyPrinted]
+            let json = try jsonEncoder.encode(gameState)
+            let content = try JSONSerialization.jsonObject(with: json, options: [])
+            var _data = Data()
+            let msgpack = try _data.pack(content)
+            let gzippedMsgpack = try msgpack.gzipped(level: .bestCompression)
+            
+            let date = Date(timeIntervalSince1970: gameState.startedAt)
+            let formatter = DateFormatter()
+            formatter.locale = .init(identifier: "en_US_POSIX")
+            formatter.dateFormat = "yyyyMMdd"
+            let ymd = formatter.string(from: date)
+            formatter.dateFormat = "HHmmss"
+            let hms = formatter.string(from: date)
+
+            let fileName = "replay.v1.\(ymd).\(hms)"
+            let url = dir.appendingPathComponent(fileName + ".json")
+            try json.write(to: url)
+            try gzippedMsgpack.write(to: dir.appendingPathComponent(fileName + ".msgpack.gz"))
+            print("Writed to \(url.path)")
+        } catch {
+            print("Error: \(error)")
         }
     }
     

@@ -11,6 +11,9 @@ let package = Package(
         .package(name: "BinaryReader", url: "https://github.com/rinsuki/BinaryReaderSwift", .branch("master")),
         .package(url: "https://github.com/apple/swift-argument-parser", .upToNextMinor(from: "0.3.0")),
         .package(url: "https://github.com/sharplet/Regex", from: "2.1.1"),
+        .package(url: "https://github.com/rinsuki/SwiftMsgPack", .branch("implement/handling-nsnull")),
+        
+        .package(name: "Gzip", url: "https://github.com/1024jp/GzipSwift", from: "5.1.1"),
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
@@ -20,6 +23,8 @@ let package = Package(
                     "BinaryReader",
                     .product(name: "ArgumentParser", package: "swift-argument-parser"),
                     "Regex",
+                    "SwiftMsgPack",
+                    "Gzip",
         ]),
         .target(name: "Pcap", dependencies: ["libpcap"]),
         .systemLibrary(name: "libpcap", pkgConfig: "libpcap", providers: []),
