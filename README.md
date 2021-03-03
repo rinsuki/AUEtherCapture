@@ -11,7 +11,7 @@ Among Us のパケットをキャプチャし、
 
 - macOS: only tested on macOS Big Sur but might works in macOS Catalina (10.15) and older
 - Linux: libpcap
-- Windows: Windows 10 (required by Swift for Windows) and [Npcap](https://nmap.org/npcap/#download)
+- Windows: Windows 10 (required by Swift) and [Npcap](https://nmap.org/npcap/#download)
   - ⚠️ Windows 7/8/8.1 doesn't supported (because Swift requires Windows 10), and might not work in old Windows 10 version (like 1909). only tested on 20H2
 
 ## Download
