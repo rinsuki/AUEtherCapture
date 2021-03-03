@@ -11,6 +11,15 @@
         }
       },
       {
+        "package": "Gzip",
+        "repositoryURL": "https://github.com/rinsuki/GzipSwift",
+        "state": {
+          "branch": "support-windows",
+          "revision": "9a6f83e0caf0bd0a7b371f906eb5cfbb388dc714",
+          "version": null
+        }
+      },
+      {
         "package": "Regex",
         "repositoryURL": "https://github.com/sharplet/Regex",
         "state": {
