@@ -8,7 +8,9 @@
 import Foundation
 import BinaryReader
 import SwiftMsgPack
+#if !os(Windows)
 import Gzip
+#endif
 
 struct Ack: Hashable {
     var pair: UDPPair
@@ -114,8 +116,10 @@ struct CaptureState {
             let json = try jsonEncoder.encode(gameState)
             let content = try JSONSerialization.jsonObject(with: json, options: [])
             var _data = Data()
+            #if !os(Windows)
             let msgpack = try _data.pack(content)
             let gzippedMsgpack = try msgpack.gzipped(level: .bestCompression)
+            #endif
             
             let date = Date(timeIntervalSince1970: gameState.startedAt)
             let formatter = DateFormatter()
@@ -128,7 +132,9 @@ struct CaptureState {
             let fileName = "replay.v1.\(ymd).\(hms)"
             let url = dir.appendingPathComponent(fileName + ".json")
             try json.write(to: url)
+            #if !os(Windows)
             try gzippedMsgpack.write(to: dir.appendingPathComponent(fileName + ".msgpack.gz"))
+            #endif
             print("Writed to \(url.path)")
         } catch {
             print("Error: \(error)")
