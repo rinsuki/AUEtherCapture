@@ -12,11 +12,11 @@
       },
       {
         "package": "Gzip",
-        "repositoryURL": "https://github.com/1024jp/GzipSwift",
+        "repositoryURL": "https://github.com/rinsuki/GzipSwift",
         "state": {
-          "branch": null,
-          "revision": "ba0b6cb51cc6202f896e469b87d2889a46b10d1b",
-          "version": "5.1.1"
+          "branch": "support-windows",
+          "revision": "9a6f83e0caf0bd0a7b371f906eb5cfbb388dc714",
+          "version": null
         }
       },
       {
