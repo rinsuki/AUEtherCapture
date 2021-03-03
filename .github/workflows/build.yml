@@ -44,6 +44,19 @@ jobs:
     - name: Install Swift (Windows)
       if: startsWith(matrix.os, 'windows-')
       run: Start-Process -Wait -FilePath swift-installer.exe -ArgumentList ("/quiet", "/norestart")
+    - name: Build & Install zlib (Windows)
+      if: startsWith(matrix.os, 'windows-')
+      run: |
+        cd thirdparty/zlib
+        mkdir build
+        cd build
+        cmake -G "Visual Studio 16 2019" -T host=x64 -DCMAKE_INSTALL_PREFIX="C:\Library\zlib" ..
+        cmake --build . --config RELEASE --target INSTALL
+        echo "INCLUDE=C:\Library\zlib\include;$env:INCLUDE" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+        echo "LIB=C:\Library\zlib\bin;C:\Library\zlib\lib;$env:LIB" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+        echo "LIBPATH=C:\Library\zlib\bin;C:\Library\zlib\lib;$env:LIBPATH" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+        echo "C:\Library\zlib\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+        Copy-Item ./.github/workflows/zlib.modulemap C:\Library\zlib\include\
     - name: Set Environment Variables (Windows)
       if: startsWith(matrix.os, 'windows-')
       run: |
