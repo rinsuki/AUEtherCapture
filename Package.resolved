@@ -39,11 +39,11 @@
       },
       {
         "package": "Starscream",
-        "repositoryURL": "https://github.com/daltoniam/Starscream",
+        "repositoryURL": "https://github.com/tesseract-one/Starscream",
         "state": {
           "branch": null,
-          "revision": "e6b65c6d9077ea48b4a7bdda8994a1d3c6969c8d",
-          "version": "3.1.1"
+          "revision": "44e25dd0af700a4da61d293eca8a4e1b90da97fc",
+          "version": null
         }
       },
       {
@@ -53,15 +53,6 @@
           "branch": null,
           "revision": "9564d61b08a5335ae0a36f789a7d71493eacadfc",
           "version": "0.3.2"
-        }
-      },
-      {
-        "package": "swift-nio-zlib-support",
-        "repositoryURL": "https://github.com/apple/swift-nio-zlib-support.git",
-        "state": {
-          "branch": null,
-          "revision": "37760e9a52030bb9011972c5213c3350fa9d41fd",
-          "version": "1.0.0"
         }
       },
       {
