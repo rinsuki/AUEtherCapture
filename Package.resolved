@@ -11,6 +11,15 @@
         }
       },
       {
+        "package": "FoundationWithNetworking",
+        "repositoryURL": "https://github.com/rinsuki/FoundationWithNetworking",
+        "state": {
+          "branch": null,
+          "revision": "67e4425413483bde37a7b1f1258d831f24e6ea4d",
+          "version": "0.1.0"
+        }
+      },
+      {
         "package": "Gzip",
         "repositoryURL": "https://github.com/rinsuki/GzipSwift",
         "state": {
@@ -51,7 +60,7 @@
         "repositoryURL": "https://github.com/rinsuki/Starscream",
         "state": {
           "branch": "support-linux-and-windows",
-          "revision": "3c4dd9f1fcd791e467a1510f65413af24dd5d72d",
+          "revision": "5bd9279d2f2591e1b8d74d2b5208b993199ef10e",
           "version": null
         }
       },
