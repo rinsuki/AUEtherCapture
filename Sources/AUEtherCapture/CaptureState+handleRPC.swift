@@ -23,24 +23,30 @@ extension CaptureState {
             for _ in 0..<impostorsCount {
                 gameState.impostors.append(reader.uint8())
             }
+            updateAutoMuteUsScene(scene: .tasks)
         case .setName:
             guard let playerID = sender.playerID, var player = gameState.players[playerID] else {
                 break
             }
             player.name = reader.str()
             gameState.add(player: player)
+            updateAutoMuteUsPlayer(player: player, action: .forceUpdated)
         case .setColor:
             guard let playerID = sender.playerID, var player = gameState.players[playerID] else {
                 return
             }
             player.color = Player.Color(rawValue: reader.uint8())!
             gameState.add(player: player)
+            updateAutoMuteUsPlayer(player: player, action: .changedColor)
         case .murderPlayer:
             let victim = gameState.components[reader.packedUInt32()]!.obj.playerID!
             let impostor = sender.playerID!
             gameState.add(event: .kill(.init(imposter: impostor, victim: victim, timestamp: timestamp)))
             gameState.modify(playerID: victim) { player in
                 player.deadAt = timestamp
+            }
+            if let victim = gameState.players[victim] {
+                updateAutoMuteUsPlayer(player: victim, action: .died)
             }
         case .sendChat:
             guard let player = sender.playerID else {
@@ -53,6 +59,7 @@ extension CaptureState {
                 break
             }
             gameState.add(event: .startMeeting(.init(player: player, deadBody: gameState.players[victim]?.id, timestamp: timestamp)))
+            updateAutoMuteUsScene(scene: .discussion)
         case .sendChatNote:
             let player = reader.uint8()
             gameState.add(event: .voted(.init(player: player, timestamp: timestamp)))
@@ -95,10 +102,17 @@ extension CaptureState {
             }
             let exiled = reader.uint8()
             let tie = reader.bool()
-            gameState.add(event: .voteFinish(.init(states: states, exiled: gameState.players[exiled]?.id, isTie: tie, timestamp: timestamp)))
+            let exiledPlayer = gameState.players[exiled]
+            gameState.add(event: .voteFinish(.init(states: states, exiled: exiledPlayer?.id, isTie: tie, timestamp: timestamp)))
+            updateAutoMuteUsScene(scene: .tasks)
+            if let exiledPlayer = exiledPlayer {
+                updateAutoMuteUsPlayer(player: exiledPlayer, action: .exiled)
+            }
         case .updateGameData:
             while reader.hasMoreData {
-                gameState.add(player: .init(from: &reader, update: true))
+                let player = Player(from: &reader, update: true)
+                gameState.add(player: player)
+                updateAutoMuteUsPlayer(player: player, action: .forceUpdated)
             }
         case .playAnimation, .completeTask: // ignore
             break
@@ -117,6 +131,7 @@ extension CaptureState {
             default:
                 fatalError("Unknown GameSettings Version: \(ver)")
             }
+            updateAutoMuteUsLobby(code: gameState.id.string, region: 0, map: gameState.settings!.v1.map)
         default:
             print("RPC", rpcType, senderID)
         }

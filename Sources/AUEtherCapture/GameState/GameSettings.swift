@@ -129,3 +129,18 @@ enum GameSettings: Encodable {
         }
     }
 }
+
+extension GameSettings {
+    var v1: V1 {
+        switch self {
+        case .v1(let v1):
+            fallthrough
+        case .v2(let v1, _):
+            fallthrough
+        case .v3(let v1, _, _):
+            fallthrough
+        case .v4(let v1, _, _, _):
+            return v1
+        }
+    }
+}

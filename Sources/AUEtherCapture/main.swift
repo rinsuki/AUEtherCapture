@@ -20,6 +20,9 @@ struct CLI: ParsableCommand {
     @Option(name: .long, help: "Output replay data to specific path.")
     var outDir: String
     
+    @Option(name: .long, help: "auethermuteproxy URL e.g. http://localhost:4494")
+    var muteProxyURL: URL?
+    
     func run() throws {
         if listNetworkInterface {
             print("Available (and compatible) Network Interfaces: ")
@@ -75,7 +78,9 @@ struct CLI: ParsableCommand {
         print("session started", session)
 
         var state = CaptureState()
+        state.muteProxyURL = muteProxyURL
         state.outDir = URL(fileURLWithPath: outDir)
+        state.updateAutoMuteUsScene(scene: .menu)
         while let (ts, packet) = session.next() {
             let ethernet = Ethernet(from: packet)
             if case .ipv4(let ipv4) = ethernet.content, case .udp(let udp) = ipv4.content {
@@ -97,6 +102,12 @@ extension IPv4.Address: ExpressibleByArgument {
             UInt8(match.captures[2]!)!,
             UInt8(match.captures[3]!)!
         )
+    }
+}
+
+extension URL: ExpressibleByArgument {
+    public init?(argument: String) {
+        self.init(string: argument)
     }
 }
 
