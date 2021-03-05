@@ -13,8 +13,6 @@ let package = Package(
         .package(url: "https://github.com/sharplet/Regex", from: "2.1.1"),
         .package(url: "https://github.com/rinsuki/SwiftMsgPack", .branch("implement/handling-nsnull")),
         .package(name: "Gzip", url: "https://github.com/rinsuki/GzipSwift", .branch("support-windows")),
-        .package(name: "SocketIO", url: "https://github.com/socketio/socket.io-client-swift", from: "15.2.0"),
-        .package(url: "https://github.com/rinsuki/Starscream", .branch("support-linux-and-windows")),
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
@@ -26,7 +24,6 @@ let package = Package(
                     "Regex",
                     "SwiftMsgPack",
                     "Gzip",
-                    "SocketIO",
         ]),
         .target(name: "Pcap", dependencies: ["libpcap"]),
         .systemLibrary(name: "libpcap", pkgConfig: "libpcap", providers: []),
