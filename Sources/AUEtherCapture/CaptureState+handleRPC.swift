@@ -103,6 +103,9 @@ extension CaptureState {
             let exiled = reader.uint8()
             let tie = reader.bool()
             let exiledPlayer = gameState.players[exiled]
+            gameState.modify(playerID: exiled) { player in
+                player.deadAt = timestamp
+            }
             gameState.add(event: .voteFinish(.init(states: states, exiled: exiledPlayer?.id, isTie: tie, timestamp: timestamp)))
             updateAutoMuteUsScene(scene: .tasks)
             if let exiledPlayer = exiledPlayer {
@@ -131,7 +134,7 @@ extension CaptureState {
             default:
                 fatalError("Unknown GameSettings Version: \(ver)")
             }
-            updateAutoMuteUsLobby(code: gameState.id.string, region: 0, map: gameState.settings!.v1.map)
+            updateAutoMuteUsLobby(code: gameState.id.string, region: 1, map: gameState.settings!.v1.map)
         default:
             print("RPC", rpcType, senderID)
         }
