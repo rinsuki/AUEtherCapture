@@ -97,6 +97,9 @@ struct CaptureState {
         case .endGame: // EndGame
             _ = reader.int32()
             let reason = EndReason(rawValue: reader.uint8())
+            guard gameState.startedAt > 0 else {
+                break
+            }
             gameState.endReason = reason
             gameState.duration = timestamp - gameState.startedAt
             gameFinish()
