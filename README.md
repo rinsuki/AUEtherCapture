@@ -4,6 +4,7 @@ Work In Progress...
 
 Among Us のパケットをキャプチャし、
 - [aureplayer](https://github.com/rinsuki/aureplayer) で再生できるリプレイデータを出力
+- [auethermuteproxy](https://github.com/rinsuki/auethermuteproxy) と組み合わせて AutoMuteUs のキャプチャーソフトとして動作
 
 します。
 
