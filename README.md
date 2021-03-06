@@ -18,9 +18,9 @@ Among Us のパケットをキャプチャし、
 
 GitHub Actions でコミット毎に自動ビルドを回しています。ビルド成果は各コミットのArtifactsからダウンロードできます (GitHub にログインしていないと表示されません)。
 
-## Tasks (0/4)
+## Tasks (1/4)
 
-- Linked with AutoMuteUs https://automute.us/
-- GUI: Create GUI Front-end for macOS
-- GUI: Create GUI Front-end for Windows
-- GUI: Create GUI Front-end for Linux (GTK?)
+- [x] Linked with AutoMuteUs https://automute.us/ (requires [auethermuteproxy](https://github.com/rinsuki/auethermuteproxy) for interact with AutoMuteUs server)
+- [ ] GUI: Create GUI Front-end for macOS
+- [ ] GUI: Create GUI Front-end for Windows
+- [ ] GUI: Create GUI Front-end for Linux (GTK?)

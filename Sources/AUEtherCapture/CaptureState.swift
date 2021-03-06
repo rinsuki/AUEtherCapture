@@ -21,7 +21,8 @@ struct CaptureState {
     var timestamp: Double = 0
     var gameState = GameState()
     var outDir: URL?
-    
+    var muteProxyURL: URL?
+
     mutating func handleACK(ack: Ack) -> Bool {
         if ackStore.contains(ack) {
             return false
@@ -55,10 +56,10 @@ struct CaptureState {
                 break
             }
             print(packet)
-//        case .disconnect(forced: let forced, reason: let reason, description: let description):
-//            <#code#>
-//        case .disconnectSimple:
-//            <#code#>
+        case .disconnect(forced: let forced, reason: let reason, description: let description):
+            fallthrough
+        case .disconnectSimple:
+            updateAutoMuteUsScene(scene: .menu)
         case .ack(let ack):
             for ack in ack {
                 let ack = Ack(pair: pair.reversed(), no: ack)
@@ -88,13 +89,18 @@ struct CaptureState {
             handleGameDataArray(&reader)
         case .joinedGame:
             print("Reset State")
+            for player in gameState.players.values {
+                updateAutoMuteUsPlayer(player: player, action: .left)
+            }
             gameState = .init()
+            updateAutoMuteUsScene(scene: .lobby)
         case .endGame: // EndGame
             _ = reader.int32()
             let reason = EndReason(rawValue: reader.uint8())
             gameState.endReason = reason
             gameState.duration = timestamp - gameState.startedAt
             gameFinish()
+            updateAutoMuteUsScene(scene: .ended)
         default:
             print("Hazel", packet)
         }
@@ -103,6 +109,12 @@ struct CaptureState {
     mutating func gameFinish() {
         if let outDir = outDir {
             output(to: outDir)
+        }
+        updateAutoMuteUsGameOver(reason: gameState.endReason!, players: Array(gameState.players.values))
+        updateAutoMuteUsScene(scene: .ended)
+        sleep(1)
+        for player in gameState.players.values {
+            updateAutoMuteUsPlayer(player: player, action: .left)
         }
         gameState = .init()
     }
@@ -189,7 +201,9 @@ struct CaptureState {
                 var reader = BinaryReader(data: data)
                 let playersLength = reader.packedUInt32()
                 for _ in 0..<playersLength {
-                    gameState.add(player: Player(from: &reader, update: false))
+                    let player = Player(from: &reader, update: false)
+                    gameState.add(player: player)
+                    updateAutoMuteUsPlayer(player: player, action: .joined)
                 }
                 print(gameState.players)
                 print(obj.components)
@@ -200,6 +214,9 @@ struct CaptureState {
             let netid = reader.packedUInt32()
             guard let obj = gameState.components[netid]?.obj else {
                 break
+            }
+            if let playerID = obj.playerID, gameState.startedAt == 0, let player = gameState.players[playerID] {
+                updateAutoMuteUsPlayer(player: player, action: .left)
             }
             guard let playerID = obj.playerID, gameState.startedAt != 0 else {
                 gameState.remove(object: obj)
@@ -214,6 +231,7 @@ struct CaptureState {
                 player.disconnectedAt = timestamp
             }
             gameState.add(event: .disconnect(.init(player: playerID, timestamp: timestamp)))
+            updateAutoMuteUsPlayer(player: player, action: .disconnected)
         default:
             print("GameData", packet)
         }
