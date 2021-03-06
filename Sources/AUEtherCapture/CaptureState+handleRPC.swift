@@ -102,10 +102,10 @@ extension CaptureState {
             }
             let exiled = reader.uint8()
             let tie = reader.bool()
-            let exiledPlayer = gameState.players[exiled]
             gameState.modify(playerID: exiled) { player in
                 player.deadAt = timestamp
             }
+            let exiledPlayer = gameState.players[exiled]
             gameState.add(event: .voteFinish(.init(states: states, exiled: exiledPlayer?.id, isTie: tie, timestamp: timestamp)))
             updateAutoMuteUsScene(scene: .tasks)
             if let exiledPlayer = exiledPlayer {
