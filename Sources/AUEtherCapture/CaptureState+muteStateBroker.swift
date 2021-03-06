@@ -64,4 +64,20 @@ extension CaptureState {
         req.httpMethod = "POST"
         URLSession.shared.dataTask(with: req).resume()
     }
+    
+    func updateAutoMuteUsGameOver(reason: EndReason, players: [Player]) {
+        guard let url = muteProxyURL else {
+            return
+        }
+        var req = URLRequest(url: url.appendingPathComponent([
+            "gameover",
+            reason.rawValue.description,
+            players.map { [
+                $0.name.addingPercentEncoding(withAllowedCharacters: .alphanumerics)!,
+                gameState.impostors.contains($0.id) ? "1" : "0",
+            ].joined(separator: "_") }.joined(separator: ","),
+        ].joined(separator: "/")))
+        req.httpMethod = "POST"
+        URLSession.shared.dataTask(with: req).resume()
+    }
 }

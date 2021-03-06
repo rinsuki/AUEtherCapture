@@ -89,6 +89,9 @@ struct CaptureState {
             handleGameDataArray(&reader)
         case .joinedGame:
             print("Reset State")
+            for player in gameState.players.values {
+                updateAutoMuteUsPlayer(player: player, action: .left)
+            }
             gameState = .init()
             updateAutoMuteUsScene(scene: .lobby)
         case .endGame: // EndGame
@@ -106,6 +109,12 @@ struct CaptureState {
     mutating func gameFinish() {
         if let outDir = outDir {
             output(to: outDir)
+        }
+        updateAutoMuteUsGameOver(reason: gameState.endReason!, players: Array(gameState.players.values))
+        updateAutoMuteUsScene(scene: .ended)
+        sleep(1)
+        for player in gameState.players.values {
+            updateAutoMuteUsPlayer(player: player, action: .left)
         }
         gameState = .init()
     }
