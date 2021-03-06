@@ -103,7 +103,6 @@ struct CaptureState {
             gameState.endReason = reason
             gameState.duration = timestamp - gameState.startedAt
             gameFinish()
-            updateAutoMuteUsScene(scene: .ended)
         default:
             print("Hazel", packet)
         }
@@ -113,8 +112,8 @@ struct CaptureState {
         if let outDir = outDir {
             output(to: outDir)
         }
-        updateAutoMuteUsGameOver(reason: gameState.endReason!, players: Array(gameState.players.values))
         updateAutoMuteUsScene(scene: .ended)
+        updateAutoMuteUsGameOver(reason: gameState.endReason!, players: Array(gameState.players.values))
         sleep(1)
         for player in gameState.players.values {
             updateAutoMuteUsPlayer(player: player, action: .left)
