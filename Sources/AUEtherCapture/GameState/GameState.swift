@@ -9,6 +9,7 @@ import Foundation
 
 struct GameState: Encodable {
     var id: GameID = .init(rawValue: 0)
+    var clientVersion: Int32 = 0
     var settings: GameSettings?
     var endReason: EndReason?
     var startedAt: Double = 0
@@ -24,6 +25,7 @@ struct GameState: Encodable {
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(id, forKey: .id)
+        try container.encode(clientVersion, forKey: .clientVersion)
         try container.encode(1, forKey: .replayVersion)
         try container.encode(settings, forKey: .settings)
         try container.encode(endReason, forKey: .endReason)
@@ -37,6 +39,7 @@ struct GameState: Encodable {
     
     enum CodingKeys: String, CodingKey {
         case id
+        case clientVersion = "client_version"
         case settings
         case endReason = "end_reason"
         case replayVersion = "replay_version"

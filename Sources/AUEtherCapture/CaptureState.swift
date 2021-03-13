@@ -19,9 +19,20 @@ struct CaptureState {
     var ackStore = Set<Ack>()
     var callAfterFinishCurrentPacket = [() -> Void]()
     var timestamp: Double = 0
-    var gameState = GameState()
+    var gameState = GameState() {
+        didSet {
+            if gameState.clientVersion != clientVersion {
+                gameState.clientVersion = clientVersion
+            }
+        }
+    }
     var outDir: URL?
     var muteProxyURL: URL?
+    var clientVersion: Int32 = 0 {
+        didSet {
+            gameState.clientVersion = clientVersion
+        }
+    }
 
     mutating func handleACK(ack: Ack) -> Bool {
         if ackStore.contains(ack) {
@@ -55,6 +66,7 @@ struct CaptureState {
             guard handleACK(ack: .init(pair: pair, no: ack)) else {
                 break
             }
+            self.clientVersion = clientVersion
             print(packet)
         case .disconnect(forced: let forced, reason: let reason, description: let description):
             fallthrough
