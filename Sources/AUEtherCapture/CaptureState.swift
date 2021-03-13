@@ -66,6 +66,12 @@ struct CaptureState {
             guard handleACK(ack: .init(pair: pair, no: ack)) else {
                 break
             }
+            if clientVersion > (3000 * 25000) {
+                fatalError("Client Version is TOO BIG (maybe endian mismatching?): \(clientVersion)")
+            }
+            if clientVersion < (2000 * 25000) {
+                fatalError("Client Version is TOO SMALL (maybe endian mismatching?): \(clientVersion)")
+            }
             self.clientVersion = clientVersion
             print(packet)
         case .disconnect(forced: let forced, reason: let reason, description: let description):
