@@ -38,7 +38,9 @@ enum AURootPacket {
             }
             self = .reliable(no, packets)
         case 8:
-            self = .hello(reader.uint16(), hazelVersion: reader.uint8(), clientVersion: reader.int32(), name: reader.str())
+            let id = reader.uint16()
+            reader.endian = .little
+            self = .hello(id, hazelVersion: reader.uint8(), clientVersion: reader.int32(), name: reader.str())
         case 9:
             if reader.hasMoreData {
                 let forced = reader.uint8() == 1
