@@ -28,10 +28,21 @@ struct CaptureState {
     }
     var outDir: URL?
     var muteProxyURL: URL?
+    var discordWebhookURL: URL?
     var clientVersion: Int32 = 0 {
         didSet {
             gameState.clientVersion = clientVersion
         }
+    }
+    
+    mutating func setDiscordWebhook(key: String) throws {
+        typealias Webhooks = [String: URL]
+        let data = try Data(contentsOf: CONFIG_DIR_URL.appendingPathComponent("webhooks.json"))
+        let webhooks = try JSONDecoder().decode(Webhooks.self, from: data)
+        guard let url = webhooks[key] else {
+            fatalError("specified webhook does not recognized")
+        }
+        discordWebhookURL = url
     }
 
     mutating func handleACK(ack: Ack) -> Bool {
@@ -132,7 +143,7 @@ struct CaptureState {
             if let outDir = outDir {
                 dat.output(to: outDir)
             }
-            try dat.upload()
+            try dat.upload(discordWebhookURL: discordWebhookURL)
         } catch {
             print("Error (relaed to result data)", error)
         }

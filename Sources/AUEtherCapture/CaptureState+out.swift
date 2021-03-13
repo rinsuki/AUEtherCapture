@@ -27,7 +27,7 @@ struct CaptureData {
         }
     }
     
-    func upload() throws {
+    func upload(discordWebhookURL: URL?) throws {
         let uploadCredsURL = CONFIG_DIR_URL.appendingPathComponent("upload_creds.json")
         guard FileManager.default.fileExists(atPath: uploadCredsURL.path) else {
             // upload is not enabled
@@ -66,6 +66,59 @@ struct CaptureData {
                 return
             }
             print("Uploaded!", url.absoluteString)
+            if let discordWebhookURL = discordWebhookURL {
+                var req = URLRequest(url: discordWebhookURL)
+                req.httpMethod = "POST"
+                req.setValue("application/json", forHTTPHeaderField: "Content-Type")
+                req.setValue(USER_AGENT, forHTTPHeaderField: "User-Agent")
+                struct DiscordWebhook: Codable {
+                    struct Embed: Codable {
+                        struct Field: Codable {
+                            var name: String
+                            var value: String
+                            var inline: Bool = false
+                        }
+                        var title: String
+                        var url: URL
+                        var fields: [Field]
+                    }
+                    var content: String
+                    var embeds: [Embed]
+                }
+                func playerToDiscordString(player: Player) -> String {
+                    return "\(player.color.discordEmoji(dead: player.deadAt != nil)) \(player.name)"
+                }
+                let players: [Player.ID: String] = state.players.mapValues { playerToDiscordString(player: $0) }
+                let formatter = DateFormatter()
+                formatter.locale = .init(identifier: "en_US_POSIX")
+                formatter.dateFormat = "yyyy/MM/dd HH:mm:ss"
+                let dateString = formatter.string(from: Date(timeIntervalSince1970: state.startedAt))
+                do {
+                    req.httpBody = try JSONEncoder().encode(DiscordWebhook(content: url.absoluteString, embeds: [.init(
+                        title: "Replay (\(dateString) 〜)",
+                        url: url,
+                        fields: [
+                            .init(name: "Duration", value: "\(Int(state.duration / 60)) min \(Int(state.duration) % 60) sec", inline: true),
+                            .init(name: "Finish Reason", value: state.endReason!.string, inline: true),
+                            .init(name: "Impostor (\(state.impostors.count))", value: state.impostors.map { players[$0] ?? "Unknown \($0)" }.joined(separator: "\n")),
+                            .init(name: "Crewmate (\(players.count - state.impostors.count))", value: players.filter { !state.impostors.contains($0.key) }.map { $0.value }.joined(separator: "\n")),
+                        ])
+                    ]))
+                    print(String(data: req.httpBody!, encoding: .utf8))
+                } catch {
+                    print("Failed to encode discord webhook", error)
+                    return
+                }
+                URLSession.shared.dataTask(with: req, completionHandler: { data, res, error in
+                    guard let data = data, let res = res as? HTTPURLResponse else {
+                        print("Failed to send discord webhook (native)", error)
+                        return
+                    }
+                    if res.statusCode >= 400 {
+                        print("Failed to send discord webhook (http)", String(data: data, encoding: .utf8))
+                    }
+                }).resume()
+            }
         }.resume()
     }
 }

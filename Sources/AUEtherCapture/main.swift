@@ -29,6 +29,9 @@ struct CLI: ParsableCommand {
     @Option(name: .long, help: "auethermuteproxy URL e.g. http://localhost:4494")
     var muteProxyURL: URL?
     
+    @Option(name: .long, help: "key of webhooks.json")
+    var discordWebhookName: String?
+    
     func run() throws {
         if listNetworkInterface {
             print("Available (and compatible) Network Interfaces: ")
@@ -84,6 +87,9 @@ struct CLI: ParsableCommand {
         print("session started", session)
 
         var state = CaptureState()
+        if let key = discordWebhookName {
+            try state.setDiscordWebhook(key: key)
+        }
         state.muteProxyURL = muteProxyURL
         state.outDir = URL(fileURLWithPath: outDir)
         state.updateAutoMuteUsScene(scene: .menu)
