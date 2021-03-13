@@ -164,8 +164,8 @@ struct CaptureState {
                     sequence: reader.uint16(),
                     playerID: playerID,
                     timestamp: timestamp - gameState.startedAt,
-                    position: .init(from: &reader),
-                    velocity: .init(from: &reader)
+                    position: .init(from: &reader, clientVersion: clientVersion),
+                    velocity: .init(from: &reader, clientVersion: clientVersion)
                 )
                 gameState.moves.append(move)
             default:

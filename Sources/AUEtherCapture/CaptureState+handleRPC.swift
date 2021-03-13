@@ -83,7 +83,7 @@ extension CaptureState {
             guard let player = sender.playerID else {
                 break
             }
-            let pos = Vector2(from: &reader)
+            let pos = Vector2(from: &reader, clientVersion: clientVersion)
             gameState.moves.append(.init(type: .vents, sequence: reader.uint16(), playerID: player, timestamp: timestamp, position: pos, velocity: .zero))
         case .votingComplete:
             var states = [GameEvent.VoteFinishEvent.PlayerVoteState]()
