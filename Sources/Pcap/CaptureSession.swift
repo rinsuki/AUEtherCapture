@@ -25,6 +25,7 @@ public class CaptureSession: IteratorProtocol, CustomStringConvertible {
     public var datalink: DataLink {
         return .init(value: pcap_datalink(nativeHandler))
     }
+    public let isBPFilterAvailable: Bool
     
     public var description: String {
         let src: String
@@ -48,6 +49,7 @@ public class CaptureSession: IteratorProtocol, CustomStringConvertible {
     public init(device: Device, promisc: Bool = false, timeoutMillisec: Int32 = 16) throws {
         self.source = .device(device)
         self.nativeHandler = try withErrBuf { pcap_open_live(device.name, 1500, promisc ? 1 : 0, timeoutMillisec, &$0) }
+        isBPFilterAvailable = true
     }
     
     public init(file: URL) throws {
@@ -56,9 +58,13 @@ public class CaptureSession: IteratorProtocol, CustomStringConvertible {
         }
         self.source = .file(file)
         self.nativeHandler = try withErrBuf { pcap_open_offline(file.path, &$0) }
+        isBPFilterAvailable = false // pcap_open_offline + pcap_setfilter = BROKE X(
     }
     
     public func setBPF(filter: String) throws {
+        guard isBPFilterAvailable else {
+            return
+        }
         var program = bpf_program()
         if pcap_compile(nativeHandler, &program, filter, 0, 0) == -1 {
             throw PcapError.failedToCompileBPF

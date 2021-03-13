@@ -70,7 +70,7 @@ struct CLI: ParsableCommand {
             Foundation.exit(1)
         }
 
-        let auports = [22023, 22123, 22223, 22323, 22423, 22523, 22623, 22723, 22823, 22923]
+        let auports: [UInt16] = [22023, 22123, 22223, 22323, 22423, 22523, 22623, 22723, 22823, 22923]
         let bpf = "host \(clientIP.string) and udp and (port \(auports.map { String($0) }.joined(separator: " or ")))"
         print(bpf)
         try session.setBPF(filter: bpf)
@@ -83,7 +83,11 @@ struct CLI: ParsableCommand {
         state.updateAutoMuteUsScene(scene: .menu)
         while let (ts, packet) = session.next() {
             let ethernet = Ethernet(from: packet)
-            if case .ipv4(let ipv4) = ethernet.content, case .udp(let udp) = ipv4.content {
+            if case .ipv4(let ipv4) = ethernet.content, case .udp(let udp) = ipv4.content,
+               // If BPF not available, fallback to manual filter
+               // by Swift's @autoclosure, do not calculates manual filter if BPF is available.
+               session.isBPFilterAvailable || ((ipv4.src == clientIP || ipv4.dst == clientIP) && (auports.contains(udp.dst) || auports.contains(udp.src)))
+            {
                 state.timestamp = ts.double
                 state.handle(data: udp.data, pair: .init(srcAddress: ipv4.src, srcPort: udp.src, dstAddress: ipv4.dst, dstPort: udp.dst))
             }
