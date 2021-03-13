@@ -109,8 +109,14 @@ struct CaptureState {
     }
     
     mutating func gameFinish() {
-        if let outDir = outDir {
-            output(to: outDir)
+        do {
+            let dat = try data()
+            if let outDir = outDir {
+                dat.output(to: outDir)
+            }
+            try dat.upload()
+        } catch {
+            print("Error (relaed to result data)", error)
         }
         updateAutoMuteUsScene(scene: .ended)
         updateAutoMuteUsGameOver(reason: gameState.endReason!, players: Array(gameState.players.values))
@@ -119,34 +125,6 @@ struct CaptureState {
             updateAutoMuteUsPlayer(player: player, action: .left)
         }
         gameState = .init()
-    }
-    
-    mutating func output(to dir: URL) {
-        do {
-            let jsonEncoder = JSONEncoder()
-            jsonEncoder.outputFormatting = [.prettyPrinted]
-            let json = try jsonEncoder.encode(gameState)
-            let content = try JSONSerialization.jsonObject(with: json, options: [])
-            var _data = Data()
-            let msgpack = try _data.pack(content)
-            let gzippedMsgpack = try msgpack.gzipped(level: .bestCompression)
-            
-            let date = Date(timeIntervalSince1970: gameState.startedAt)
-            let formatter = DateFormatter()
-            formatter.locale = .init(identifier: "en_US_POSIX")
-            formatter.dateFormat = "yyyyMMdd"
-            let ymd = formatter.string(from: date)
-            formatter.dateFormat = "HHmmss"
-            let hms = formatter.string(from: date)
-
-            let fileName = "replay.v1.\(ymd).\(hms)"
-            let url = dir.appendingPathComponent(fileName + ".json")
-            try json.write(to: url)
-            try gzippedMsgpack.write(to: dir.appendingPathComponent(fileName + ".msgpack.gz"))
-            print("Writed to \(url.path)")
-        } catch {
-            print("Error: \(error)")
-        }
     }
     
     mutating func handleGameDataArray(_ reader: inout BinaryReader) {

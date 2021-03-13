@@ -4,6 +4,12 @@ import ArgumentParser
 import Regex
 import BinaryReader
 
+#if os(macOS) || os(Linux) || os(Windows)
+let CONFIG_DIR_URL = try! FileManager.default.url(for: .applicationSupportDirectory, in: .userDomainMask, appropriateFor: nil, create: false).appendingPathComponent("AUEtherCapture")
+try FileManager.default.createDirectory(at: CONFIG_DIR_URL, withIntermediateDirectories: true, attributes: nil)
+print("Config:", CONFIG_DIR_URL.path)
+#endif
+
 struct CLI: ParsableCommand {
     @Option(name: .long, help: "IP Address of client (IPv4).")
     var clientIP: IPv4.Address
