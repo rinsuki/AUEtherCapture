@@ -19,7 +19,7 @@ jobs:
     # --- Linux
     - name: Install Dependencies (Linux)
       if: startsWith(matrix.os, 'ubuntu-')
-      run: sudo apt install libpcap-dev libcurl4-openssl-dev
+      run: sudo apt update && sudo apt install libpcap-dev libcurl4-openssl-dev
     # --- Windows
     - uses: seanmiddleditch/gha-setup-vsdevenv@8c6bbf80998779f2bba87b1452832e561b65fd57
       if: startsWith(matrix.os, 'windows-')
