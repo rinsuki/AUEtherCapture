@@ -42,16 +42,16 @@ enum AURootPacket {
             reader.endian = .little
             self = .hello(id, hazelVersion: reader.uint8(), clientVersion: reader.int32(), name: reader.str())
         case 9:
-            if reader.hasMoreData {
-                let forced = reader.uint8() == 1
-                let packetlen = reader.uint16()
-                reader.pointer += 1
-                let reason = reader.uint8()
-                let description = packetlen > 1 ? reader.str() : nil
-                self = .disconnect(forced: forced, reason: reason, description: description)
-            } else {
+//            if reader.hasMoreData {
+//                let forced = reader.uint8() == 1
+//                let packetlen = reader.uint16()
+//                reader.pointer += 1
+//                let reason = reader.uint8()
+//                let description = packetlen > 1 ? reader.str() : nil
+//                self = .disconnect(forced: forced, reason: reason, description: description)
+//            } else {
                 self = .disconnectSimple
-            }
+//            }
         case 0x0A:
             self = .ack([reader.uint16()])
         case 0xC:

@@ -21,6 +21,7 @@ extension Player {
         case brown
         case cyan
         case lightGreen
+        case unknown
         
         var key: String {
             switch self {
@@ -48,6 +49,8 @@ extension Player {
                 return "Cyan"
             case .lightGreen:
                 return "LightGreen"
+            case .unknown:
+                return "Unknown"
             }
         }
         
@@ -82,6 +85,8 @@ extension Player {
                 return dead ? "<:aucyandead:762397192307867698>" : "<:aucyan:762392087945281557>"
             case .lightGreen:
                 return dead ? "<:aulimedead:762397192366325793>" : "<:aulime:762392088121442334>"
+            case .unknown:
+                return dead ? "🤔(dead)" : "🤔"
             }
         }
     }

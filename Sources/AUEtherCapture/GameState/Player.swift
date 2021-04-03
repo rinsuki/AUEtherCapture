@@ -31,7 +31,12 @@ extension Player {
         let endPointer = update ? reader.pointer + UInt(len + 1) : nil
         id = reader.uint8()
         name = reader.str()
-        color = Player.Color(rawValue: .init(reader.packedUInt32()))!
+        let colorID = reader.packedInt32()
+        if colorID < 0 {
+            color = .unknown
+        } else {
+            color = Player.Color(rawValue: .init(colorID))!
+        }
         _ = reader.packedUInt32() // hat
         _ = reader.packedUInt32() // pet
         _ = reader.packedUInt32() // skin
