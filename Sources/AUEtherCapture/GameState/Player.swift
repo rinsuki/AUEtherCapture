@@ -23,6 +23,10 @@ struct Player: Encodable {
         case deadAt = "dead_at"
         case disconnectedAt = "disconnected_at"
     }
+    
+    func shouldNotifyToAutoMuteUs(old: Player) -> Bool {
+        return id != old.id || name != old.name || color != old.color || deadAt != old.deadAt || disconnectedAt != old.disconnectedAt
+    }
 }
 
 extension Player {

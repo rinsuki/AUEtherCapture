@@ -112,11 +112,7 @@ extension CaptureState {
                 updateAutoMuteUsPlayer(player: exiledPlayer, action: .exiled)
             }
         case .updateGameData:
-            while reader.hasMoreData {
-                let player = Player(from: &reader, update: true)
-                gameState.add(player: player)
-                updateAutoMuteUsPlayer(player: player, action: .forceUpdated)
-            }
+            print("updateGameData shouldn't called anymore")
         case .playAnimation, .completeTask: // ignore
             break
         case .syncSettings:

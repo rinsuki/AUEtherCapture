@@ -185,6 +185,18 @@ struct CaptureState {
                     velocity: .init(from: &reader, clientVersion: clientVersion)
                 )
                 gameState.moves.append(move)
+            case .gameData:
+                while reader.hasMoreData {
+                    let player = Player(from: &reader, update: true)
+                    if let oldPlayer = gameState.players[player.id] {
+                        if player.shouldNotifyToAutoMuteUs(old: oldPlayer) {
+                            updateAutoMuteUsPlayer(player: player, action: .forceUpdated)
+                        }
+                    } else {
+                        updateAutoMuteUsPlayer(player: player, action: .joined)
+                    }
+                    gameState.add(player: player)
+                }
             default:
                 print("Data", obj.spawnType)
             }
