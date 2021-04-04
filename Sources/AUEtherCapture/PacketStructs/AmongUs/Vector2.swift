@@ -20,7 +20,7 @@ let VECTOR2_FLOAT_RANGES_CHANGED_VERSION = 50530650 // maybe more old
 extension Vector2 {
     private static func lerp(_ input: Double, clientVersion: Int32) -> Double {
         let i = min(max(input, 0), 1)
-        if clientVersion >= VECTOR2_FLOAT_RANGES_CHANGED_VERSION {
+        if clientVersion >= VECTOR2_FLOAT_RANGES_CHANGED_VERSION || clientVersion == 0 /* clientVersion == 0 fallback to latest version */ {
             return (-50) + (100 * i)
         } else {
             return (-40) + (80 * i)
