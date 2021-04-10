@@ -15,9 +15,9 @@ struct EndReason: RawRepresentable, Equatable, Encodable {
     static let CREWMATES_BY_TASK = EndReason(rawValue: 1)
     static let IMPOSTORS_BY_VOTE = EndReason(rawValue: 2)
     static let IMPOSTORS_BY_KILL = EndReason(rawValue: 3)
-    static let IMPOSTORS_BY_SABOTAGE = EndReason(rawValue: 5)
-    static let IMPOSTOR_DISCONNECT = EndReason(rawValue: 6)
-    static let CREWMATE_DISCONNECT = EndReason(rawValue: 7)
+    static let IMPOSTORS_BY_SABOTAGE = EndReason(rawValue: 4)
+    static let IMPOSTOR_DISCONNECT = EndReason(rawValue: 5)
+    static let CREWMATE_DISCONNECT = EndReason(rawValue: 6)
     
     var string: String {
         switch self {
