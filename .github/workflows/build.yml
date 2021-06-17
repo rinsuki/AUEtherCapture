@@ -80,7 +80,8 @@ jobs:
       run: swift build -c release
     - name: swift build (for Linux, static stdlib)
       if: ${{ !(startsWith(matrix.os, 'macOS-') || startsWith(matrix.os, 'windows-')) }}
-      run: swift build -c release -Xswiftc -static-stdlib 
+      # -l*** parameters are workaround of https://bugs.swift.org/browse/SR-14536
+      run: swift build -c release -Xswiftc -static-stdlib -Xlinker -lCFURLSessionInterface -Xlinker -lcurl
     # Generate Artifact
     - name: Prepare for Artifact
       run: |
