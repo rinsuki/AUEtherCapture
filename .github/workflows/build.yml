@@ -11,6 +11,7 @@ jobs:
         - macOS-latest
         - ubuntu-20.04
         - windows-2019
+      fail-fast: false
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@master
