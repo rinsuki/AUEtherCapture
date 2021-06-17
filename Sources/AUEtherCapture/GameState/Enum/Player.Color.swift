@@ -21,6 +21,12 @@ extension Player {
         case brown
         case cyan
         case lightGreen
+        case maroon
+        case rose
+        case banana
+        case lightGrey
+        case tan
+        case coral
         case unknown
         
         var key: String {
@@ -49,6 +55,18 @@ extension Player {
                 return "Cyan"
             case .lightGreen:
                 return "LightGreen"
+            case .maroon:
+                return "Maroon"
+            case .rose:
+                return "Rose"
+            case .banana:
+                return "Banana"
+            case .lightGrey:
+                return "LightGrey"
+            case .tan:
+                return "Tan"
+            case .coral:
+                return "Coral"
             case .unknown:
                 return "Unknown"
             }
@@ -85,6 +103,19 @@ extension Player {
                 return dead ? "<:aucyandead:762397192307867698>" : "<:aucyan:762392087945281557>"
             case .lightGreen:
                 return dead ? "<:aulimedead:762397192366325793>" : "<:aulime:762392088121442334>"
+            // TODO: replace with automuteus emoji after they added emojis
+            case .maroon:
+                return dead ? "(Maroon, Dead)" : "(Maroon)"
+            case .rose:
+                return dead ? "(Rose, Dead)" : "(Rose)"
+            case .banana:
+                return dead ? "(Banana, Dead)" : "(Banana)"
+            case .lightGrey:
+                return dead ? "(Grey, Dead)" : "(Grey)"
+            case .tan:
+                return dead ? "(Tan, Dead)" : "(Tan)"
+            case .coral:
+                return dead ? "(Coral, Dead)" : "(Coral)"
             case .unknown:
                 return dead ? "🤔(dead)" : "🤔"
             }
