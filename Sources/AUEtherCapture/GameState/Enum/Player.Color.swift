@@ -103,19 +103,19 @@ extension Player {
                 return dead ? "<:aucyandead:762397192307867698>" : "<:aucyan:762392087945281557>"
             case .lightGreen:
                 return dead ? "<:aulimedead:762397192366325793>" : "<:aulime:762392088121442334>"
-            // TODO: replace with automuteus emoji after they added emojis
             case .maroon:
-                return dead ? "(Maroon, Dead)" : "(Maroon)"
+                return dead ? "<:aumaroondead:855108016890576906>" : "<:aumaroon:855108016881008670>"
             case .rose:
-                return dead ? "(Rose, Dead)" : "(Rose)"
+                return dead ? "<:aurosedead:855108016817700936>" : "<:aurose:855108016734732329>"
             case .banana:
-                return dead ? "(Banana, Dead)" : "(Banana)"
+                return dead ? "<:aubananadead:855108016746266644>" : "<:aubanana:855108016420552736>"
             case .lightGrey:
-                return dead ? "(Grey, Dead)" : "(Grey)"
+                return dead ? "<:augraydead:855108016898048020>" : "<:augray:855108016801054760>"
             case .tan:
-                return dead ? "(Tan, Dead)" : "(Tan)"
+                return dead ? "<:autandead:855108017007886356>" : "<:autan:855108016546250753>"
             case .coral:
-                return dead ? "(Coral, Dead)" : "(Coral)"
+                // AutoMuteUs uses Sunset instead of Coral (maybe mistake?)
+                return dead ? "<:ausunsetdead:855108017096097802>" : "<:ausunset:855108016466821151>"
             case .unknown:
                 return dead ? "🤔(dead)" : "🤔"
             }
